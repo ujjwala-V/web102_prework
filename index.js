@@ -25,31 +25,37 @@ function deleteChildElements(parent) {
 // grab the element with the id games-container
 const gamesContainer = document.getElementById("games-container");
 
+// call the function we just defined using the correct variable
+// later, we'll call this function using a different list of games
+addGamesToPage(GAMES_JSON);
+
 // create a function that adds all data from the games array to the page
 function addGamesToPage(games) {
 
     // loop over each item in the data
-
+    for (let i = 0; i < games.length; i++) {
 
         // create a new div element, which will become the game card
-
-
+        let gameDiv = document.createElement('div');
+        gameDiv.id = 'gameContent';
         // add the class game-card to the list
+        gameDiv.className = 'game-card';
+        // set the inner HTML using a template literal to display some info about each game
+        const gameInfo = `<div class="games"> <h1> Welcome to '${games[i].name}' </h1> 
+                          <p> ${games[i].description}</p> 
+                          <img class="game-img" src="${games[i].img}">
+                          <p> Goals : ${games[i].goal}</p> </div>`;
+        
+        gameDiv.innerHTML = gameInfo;
+        // append the game to the games-container
+        let div = document.getElementById("games-container");
+        //div.classList.add("game-card");
+        div.append(gameDiv);
 
-
-        // set the inner HTML using a template literal to display some info 
-        // about each game
+    }
         // TIP: if your images are not displaying, make sure there is space
         // between the end of the src attribute and the end of the tag ("/>")
-
-
-        // append the game to the games-container
-
 }
-
-// call the function we just defined using the correct variable
-// later, we'll call this function using a different list of games
-
 
 /*************************************************************************************
  * Challenge 4: Create the summary statistics at the top of the page displaying the
@@ -57,24 +63,29 @@ function addGamesToPage(games) {
  * Skills used: arrow functions, reduce, template literals
 */
 
-// grab the contributions card element
-const contributionsCard = document.getElementById("num-contributions");
+    // grab the contributions card element
+    const contributionsCard = document.getElementById("num-contributions");
 
-// use reduce() to count the number of total contributions by summing the backers
+    // use reduce() to count the number of total contributions by summing the backers
+    var totContributions = GAMES_JSON.reduce((totBackers, curGame) => { return totBackers+curGame.backers } ,0 );
 
+    // set the inner HTML using a template literal and toLocaleString to get a number with commas
+    const contributions = `<div> <p> Total : ${totContributions.toLocaleString('en-US')}</p> </div>`;
+    contributionsCard.innerHTML = contributions;
 
-// set the inner HTML using a template literal and toLocaleString to get a number with commas
+    // grab the amount raised card, then use reduce() to find the total amount raised
+    const raisedCard = document.getElementById("total-raised");
+    var totRaised = GAMES_JSON.reduce((totPledged, curGame) => { return totPledged+curGame.pledged } ,0 );
 
+    // set inner HTML using template literal
+    const raisedAmount = `<div> <p> Total : $${totRaised.toLocaleString({ style: 'currency', currency: 'USD'})}</p> </div>`;
+    raisedCard.innerHTML = raisedAmount;
 
-// grab the amount raised card, then use reduce() to find the total amount raised
-const raisedCard = document.getElementById("total-raised");
-
-// set inner HTML using template literal
-
-
-// grab number of games card and set its inner HTML
-const gamesCard = document.getElementById("num-games");
-
+    // grab number of games card and set its inner HTML
+    const gamesCard = document.getElementById("num-games");
+    var totGames = GAMES_JSON.reduce((prevGames, curGame, curGameIndex) => { return curGameIndex+1} ,0 );
+    const gamesTotal = `<div> <p> Total : ${totGames}</p> </div>`;
+    gamesCard.innerHTML = gamesTotal;
 
 /*************************************************************************************
  * Challenge 5: Add functions to filter the funded and unfunded games
